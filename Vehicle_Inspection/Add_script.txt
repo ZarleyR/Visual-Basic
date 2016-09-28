@@ -1,0 +1,344 @@
+Private Sub CommandButton1_Click()
+    CommandButton3.Locked = True
+    CommandButton3.BackColor = &HC0C0C0
+    Label13.Visible = False
+    TextBox13.Visible = False
+    CommandButton4.Caption = "Issue Replacement"
+    Add.Hide
+End Sub
+
+
+Private Sub CommandButton2_Click()
+    TextBox1.value = ""
+    TextBox2.value = ""
+    TextBox3.value = ""
+    TextBox4.value = ""
+    TextBox5.value = ""
+    TextBox6.value = ""
+    TextBox7.value = ""
+    TextBox8.value = ""
+    TextBox9.value = ""
+    TextBox11.value = ""
+    TextBox12.value = ""
+    TextBox13.value = ""
+    CheckBox1.value = False
+    CheckBox2.value = False
+    CommandButton3.Locked = True
+    CommandButton3.BackColor = &HC0C0C0
+    Label13.Visible = False
+    TextBox13.Visible = False
+    TextBox10.SetFocus
+    TextBox3.SetFocus
+End Sub
+
+
+Private Sub CommandButton3_Click()
+    Application.ScreenUpdating = False
+    Call UpdateRecord
+    CommandButton3.BackColor = &HC0C0C0
+    TextBox1.value = ""
+    ResetFocus
+    CommandButton3.Locked = True
+    CommandButton3.BackColor = &HC0C0C0
+    Sheets("Tracking").Activate
+    Range("F65000").End(xlUp).Offset(0, 0).Activate
+    TextBox2.value = ActiveCell.Offset(0, 2)
+    TextBox3.value = ActiveCell.Offset(0, 3)
+    TextBox4.value = ActiveCell.Offset(0, 4)
+    TextBox5.value = ActiveCell.Offset(0, 5)
+    TextBox6.value = ""
+    TextBox7.value = ActiveCell.Offset(0, -1)
+    TextBox8.value = ActiveCell.Offset(0, 8)
+    TextBox9.value = ""
+    TextBox11.value = ""
+    TextBox13.value = ""
+    TextBox1.value = ""
+    TextBox13.Visible = False
+    Label13.Visible = False
+    CommandButton4.Caption = "Issue Replacement"
+    CheckBox1.value = False
+    CheckBox2.value = False
+    TextBox12.value = ""
+    TextBox10.SetFocus
+    Add.TextBox3.SetFocus
+    TextBox3.SelStart = 0
+    TextBox3.SelLength = Len(TextBox3.Text)
+    Application.ScreenUpdating = True
+End Sub
+
+Private Sub CommandButton4_Click()
+    If CommandButton4.Caption = "Cancel" Then
+        CommandButton4.Caption = "Issue Replacement"
+        Label13.Visible = False
+        TextBox13.value = ""
+        TextBox13.Visible = False
+    ElseIf CommandButton4.Caption = "Issue Replacement" Then
+        Label13.Visible = True
+        TextBox13.Visible = True
+        CommandButton4.Caption = "Cancel"
+    Else: CommandButton4.Caption = "Cancel Replacement"
+        If MsgBox("This will remove the Replacement Radio from this record!", vbOKCancel) = vbOK Then
+            TextBox13.value = ""
+            Label13.Visible = False
+            TextBox13.Visible = False
+            CommandButton4.Caption = "Issue Replacement"
+        End If
+    End If
+End Sub
+
+Private Sub TextBox2_AfterUpdate()
+If Add.TextBox2.value < "0" Then
+    Else
+    value = Add.TextBox2.value
+    If Right(value, 1) = "P" Or Right(value, 1) = "M" Then
+    
+    Else
+        If Mid(value, 6, 1) = "5" Then
+            If MsgBox("Based on Model Type, you entered an Ascend Radio!  Is this a Portable?", vbYesNo) = vbYes Then
+                Add.TextBox2.value = value + "P"
+            Else
+                Add.TextBox2.value = value + "M"
+            End If
+        Else
+            Exit Sub
+        End If
+        End If
+End If
+End Sub
+
+Private Sub TextBox3_Change()
+
+End Sub
+
+Private Sub TextBox6_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Dim vResult As Boolean
+vResult = Application.CountIf(Worksheets("Tracking").Range("L:L"), TextBox6.value)
+If TextBox6.value = "" Then
+    Exit Sub
+Else
+If vResult = "True" Then
+                MsgBox "Unit ID Already Entered!", vbOKOnly
+            Else
+                Exit Sub
+            End If
+            End If
+End Sub
+
+Private Sub TextBox7_Change()
+
+End Sub
+
+Private Sub TextBox9_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Dim myString As String
+myString = TextBox9.Text
+If KeyCode = vbKeyReturn Then
+    TextBox9.value = myString & ", "
+    TextBox9.SelStart = TextBox9.TextLength
+    Application.SendKeys "{END}"
+Else
+    Exit Sub
+End If
+Application.SendKeys "{UP}"
+End Sub
+Private Sub TextBox11_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Dim myString As String
+myString = TextBox11.Text
+If KeyCode = vbKeyReturn Then
+    TextBox11.value = myString & ", "
+    TextBox11.SelStart = TextBox11.TextLength
+    Application.SendKeys "{END}"
+Else
+    Exit Sub
+End If
+Application.SendKeys "{UP}"
+End Sub
+Private Sub TextBox1_AfterUpdate()
+Dim value As String
+value = UCase(Add.TextBox1.value)
+If Left(TextBox1.value, 1) = " " Then
+    TextBox1.value = Right(TextBox1.value, Len(TextBox1.value) - 1)
+    Call Checksum
+Else
+    If Add.TextBox1.value < "0" Then
+    Else
+    value = Add.TextBox1.value
+        If Left(value, 1) = "S" Or Left(value, 1) = "s" Then
+            TextBox1.value = Right(value, Len(value) - 1)
+        Else
+        End If
+        Call Checksum
+    End If
+End If
+End Sub
+Private Sub TextBox1_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+ If KeyCode = vbKeyReturn Then
+ Application.OnTime Now, "resetfocus"
+ 
+ End If
+ End Sub
+
+Private Sub Checksum()
+    Dim vResult As Boolean
+    vResult = Application.CountIf(Worksheets("Tracking").Range("F:F"), TextBox1.value)
+    
+            If vResult = "True" Then
+                If MsgBox("Radio Already Entered! Do you want to Modify?", vbDefaultButton2 + vbYesNo + vbExclamation) = vbYes Then
+                    Add.CommandButton3.Locked = False
+                    Add.CommandButton3.BackColor = &HC000C0
+                    Call duplicate
+                Else
+                Add.TextBox1.value = ""
+                End If
+            Else
+                Application.Wait (Now + TimeValue("00:00:01"))
+                Beep
+                Call Store_Inventory
+            End If
+End Sub
+
+Private Sub Store_Inventory()
+    Application.ScreenUpdating = False
+    Sheets("Tracking").Activate
+    Range("F65000").End(xlUp).Offset(1, 0).Activate
+    ActiveCell.value = UCase(TextBox1.value)
+    ActiveCell.Offset(0, 1).Activate
+    ActiveCell.FormulaR1C1 = "=RIGHT(RC[-1],5)"
+    TextBox1.value = ""
+    ActiveCell.Offset(0, 1) = TextBox2.value
+    ActiveCell.Offset(0, 2) = TextBox3.value
+    ActiveCell.Offset(0, 3) = TextBox4.value
+    ActiveCell.Offset(0, 4) = TextBox5.value
+    ActiveCell.Offset(0, 5) = TextBox6.value
+    ActiveCell.Offset(0, -2) = TextBox7.value
+    ActiveCell.Offset(0, 6) = "=CONCATENATE(""Radio "",RC[-6],""_UnitID_"",RC[-1])"
+    ActiveCell.Offset(0, 7) = TextBox8.value
+    ActiveCell.Offset(0, 8) = TextBox9.value
+    ActiveCell.Offset(0, 9) = TextBox11.value
+    ActiveCell.Offset(0, 10) = ""
+    ActiveCell.Offset(0, 11) = Add.CheckBox1.value
+    ActiveCell.Offset(0, 12) = Add.CheckBox2.value
+    ActiveCell.Offset(0, 13) = Add.TextBox13.value
+    ActiveCell.Offset(0, 14) = "=RIGHT(RC[-1],5)"
+    ActiveCell.Offset(0, 15) = Add.TextBox12.value
+    ActiveCell.Offset(0, -5) = TextBox10.value
+    ActiveCell.Offset(0, -6) = TextBox10.value
+    TextBox6.value = ""
+    TextBox9.value = ""
+    TextBox10.SetFocus
+    Add.TextBox3.SetFocus
+    TextBox3.SelStart = 0
+    TextBox3.SelLength = Len(TextBox3.Text)
+    Application.ScreenUpdating = True
+End Sub
+
+
+Private Sub TextBox10_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    TextBox10.value = Now
+End Sub
+
+Private Sub TextBox9_Change()
+
+End Sub
+
+Private Sub Userform_Activate()
+    TextBox10.SetFocus
+    Application.ScreenUpdating = False
+    Sheets("Tracking").Activate
+    Range("F65000").End(xlUp).Offset(0, 0).Activate
+    TextBox2.value = ActiveCell.Offset(0, 2)
+    TextBox3.value = ActiveCell.Offset(0, 3)
+    TextBox4.value = ActiveCell.Offset(0, 4)
+    TextBox5.value = ActiveCell.Offset(0, 5)
+    TextBox6.value = ""
+    TextBox7.value = ActiveCell.Offset(0, -1)
+    TextBox8.value = ActiveCell.Offset(0, 8)
+    TextBox9.value = ""
+    TextBox11.value = ""
+    TextBox12.value = ""
+    TextBox1.value = ""
+    TextBox13.value = ""
+    CheckBox1.value = False
+    CheckBox2.value = False
+    TextBox10.SetFocus
+    Add.TextBox3.SetFocus
+    TextBox3.SelStart = 0
+    TextBox3.SelLength = Len(TextBox3.Text)
+    Application.ScreenUpdating = True
+End Sub
+
+Private Sub Userform_Click()
+    TextBox10.SetFocus
+    Add.TextBox3.SetFocus
+    TextBox3.SelStart = 0
+    TextBox3.SelLength = Len(TextBox3.Text)
+End Sub
+
+'Private Sub Store_Inventory()
+'    Sheets("Active Inventory").Activate
+'    Range("A1").End(xlDown).Offset(1, 0).Activate
+'    ActiveCell.Value = TextBox1.Value
+'    Sheets("Inventory Check").Activate
+'    TextBox1.Value = ""
+'End Sub
+
+'Private Sub TextBox1_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+' Application.ScreenUpdating = False
+' If KeyCode = vbKeyReturn Then
+' Application.OnTime Now, "resetfocus2"
+' End If
+' End Sub
+Private Sub UserForm_Deactivate()
+    CommandButton3.Locked = True
+    CommandButton3.BackColor = &HC0C0C0
+End Sub
+Private Sub UpdateRecord()
+        Application.ScreenUpdating = False
+        ActiveCell.Offset(0, 2).value = Add.TextBox2.value
+        ActiveCell.Offset(0, 3).value = Add.TextBox3.value
+        ActiveCell.Offset(0, 4).value = Add.TextBox4.value
+        ActiveCell.Offset(0, 5).value = Add.TextBox5.value
+        ActiveCell.Offset(0, 6).value = Add.TextBox6.value
+        ActiveCell.Offset(0, -1).value = Add.TextBox7.value
+        ActiveCell.Offset(0, 7) = "=CONCATENATE(""Radio "",RC[-6],""_UnitID_"",RC[-1])"
+        ActiveCell.Offset(0, 8).value = Add.TextBox8.value
+        ActiveCell.Offset(0, 9).value = Add.TextBox9.value
+        ActiveCell.Offset(0, 10).value = Add.TextBox11.value
+        ActiveCell.Offset(0, 12).value = Add.CheckBox1.value
+        ActiveCell.Offset(0, 13).value = Add.CheckBox2.value
+        ActiveCell.Offset(0, 14).value = Add.TextBox13.value
+        ActiveCell.Offset(0, 15).value = "=RIGHT(RC[-1],5)"
+        ActiveCell.Offset(0, 16).value = Add.TextBox12.value
+        Application.ScreenUpdating = True
+        Add.TextBox10.SetFocus
+End Sub
+Private Sub duplicate()
+    Application.ScreenUpdating = False
+    Sheet2.Range("F2").Activate
+    Do Until ActiveCell.value = UCase(Add.TextBox1.Text)
+        ActiveCell.Offset(1, 0).Select
+    Loop
+    Add.TextBox1.value = ActiveCell.value
+    Add.TextBox2.value = ActiveCell.Offset(0, 2).value
+    Add.TextBox3.value = ActiveCell.Offset(0, 3).value
+    Add.TextBox4.value = ActiveCell.Offset(0, 4).value
+    Add.TextBox5.value = ActiveCell.Offset(0, 5).value
+    Add.TextBox6.value = ActiveCell.Offset(0, 6).value
+    Add.TextBox7.value = ActiveCell.Offset(0, -1).value
+    Add.TextBox8.value = ActiveCell.Offset(0, 8).value
+    Add.TextBox9.value = ActiveCell.Offset(0, 9).value
+    Add.TextBox11.value = ActiveCell.Offset(0, 10).value
+    Add.CheckBox1.value = ActiveCell.Offset(0, 12).value
+    Add.CheckBox2.value = ActiveCell.Offset(0, 13).value
+    Add.TextBox13.value = ActiveCell.Offset(0, 14).value
+    If TextBox13.value = "" Then
+        Add.Label13.Visible = False
+        Add.TextBox13.Visible = False
+        CommandButton4.Caption = "Issue Replacement"
+    Else
+        Add.Label13.Visible = True
+        Add.TextBox13.Visible = True
+        CommandButton4.Caption = "Cancel Replacement"
+    End If
+    Add.TextBox12.value = ActiveCell.Offset(0, 16).value
+    Application.ScreenUpdating = True
+End Sub

@@ -1,0 +1,266 @@
+Private Sub CommandButton1_Click()
+    Checkout.Hide
+End Sub
+
+Private Sub CommandButton3_Click()
+        'Check Out Button'
+        If TextBox1.value = "" Then
+            MsgBox "Scan Radio Cell is Empty", vbOKOnly
+                Exit Sub
+        Else
+            Sheet2.Range("F2").Activate
+            Do Until ActiveCell.value = Checkout.TextBox1.Text
+                ActiveCell.Offset(1, 0).Select
+            Loop
+                If ActiveCell.Offset(0, -2).value = "" Then
+                    ActiveCell.Offset(0, -3).value = Checkout.TextBox10.value
+                    ActiveCell.Offset(0, -2).value = Checkout.TextBox10.value
+                    Checkout.TextBox11.value = ""
+                    ActiveCell.Offset(0, 2).value = Checkout.TextBox2.value
+                    ActiveCell.Offset(0, 3).value = Checkout.TextBox3.value
+                    ActiveCell.Offset(0, 4).value = Checkout.TextBox4.value
+                    ActiveCell.Offset(0, 5).value = Checkout.TextBox5.value
+                    ActiveCell.Offset(0, 6).value = Checkout.TextBox6.value
+                    ActiveCell.Offset(0, 7) = "=CONCATENATE(""Radio "",RC[-6],""_UnitID_"",RC[-1])"
+                    Checkout.TextBox7.value = ActiveCell.Offset(0, 7).value
+                    ActiveCell.Offset(0, 8).value = Checkout.TextBox8.value
+                    ActiveCell.Offset(0, 9).value = Checkout.TextBox9.value
+                    ActiveCell.Offset(0, 10).value = Checkout.TextBox13.value
+                    ActiveCell.Offset(0, -1).value = Checkout.TextBox12.value
+                    ActiveCell.Offset(0, 12).value = Checkout.CheckBox1.value
+                    ActiveCell.Offset(0, 13).value = Checkout.CheckBox2.value
+                    ActiveCell.Offset(0, 16).value = Checkout.TextBox14.value
+                    ActiveCell.Offset(0, 11).FormulaR1C1 = "=IF(RC[-13]-RC[-15] > 2,((RC[-13]-RC[-15])-1.7),IF(RC[-13]-RC[-15] > 1,(RC[-13]-RC[-15])-0.7,IF(RC[-13]-RC[-15] > 0.5,(RC[-13]-RC[-15])-0.7,(RC[-13]-RC[-15]))))"
+                    Checkout.TextBox10.SetFocus
+                    Call ResetFocus2
+                    Checkout.TextBox11.SetFocus
+                Else
+                    If MsgBox("This action will update the Check-Out Time.  Do you want to proceed?", vbDefaultButton2 + vbYesNo + vbExclamation) = vbYes Then
+                        ActiveCell.Offset(0, -3).value = Checkout.TextBox10.value
+                        ActiveCell.Offset(0, -2).value = Checkout.TextBox10.value
+                        Checkout.TextBox11.value = ""
+                        ActiveCell.Offset(0, 2).value = Checkout.TextBox2.value
+                        ActiveCell.Offset(0, 3).value = Checkout.TextBox3.value
+                        ActiveCell.Offset(0, 4).value = Checkout.TextBox4.value
+                        ActiveCell.Offset(0, 5).value = Checkout.TextBox5.value
+                        ActiveCell.Offset(0, 6).value = Checkout.TextBox6.value
+                        ActiveCell.Offset(0, 7) = "=CONCATENATE(""Radio "",RC[-6],""_UnitID_"",RC[-1])"
+                        Checkout.TextBox7.value = ActiveCell.Offset(0, 7).value
+                        ActiveCell.Offset(0, 8).value = Checkout.TextBox8.value
+                        ActiveCell.Offset(0, 9).value = Checkout.TextBox9.value
+                        ActiveCell.Offset(0, 10).value = Checkout.TextBox13.value
+                        ActiveCell.Offset(0, -1).value = Checkout.TextBox12.value
+                        ActiveCell.Offset(0, 12).value = Checkout.CheckBox1.value
+                        ActiveCell.Offset(0, 13).value = Checkout.CheckBox2.value
+                        ActiveCell.Offset(0, 16).value = Checkout.TextBox14.value
+                        ActiveCell.Offset(0, 11).FormulaR1C1 = "=RC[-13]-RC[-15]"
+                        Checkout.TextBox10.SetFocus
+                        Call ResetFocus2
+                        Checkout.TextBox11.SetFocus
+                    Else
+                        Exit Sub
+                    End If
+                End If
+            End If
+        End Sub
+
+Private Sub CommandButton4_Click()
+        Checkout.TextBox11.value = ""
+        ActiveCell.Offset(0, 2).value = Checkout.TextBox2.value
+        ActiveCell.Offset(0, 3).value = Checkout.TextBox3.value
+        ActiveCell.Offset(0, 4).value = Checkout.TextBox4.value
+        ActiveCell.Offset(0, 5).value = Checkout.TextBox5.value
+        ActiveCell.Offset(0, 6).value = Checkout.TextBox6.value
+        ActiveCell.Offset(0, 7) = "=CONCATENATE(""Radio "",RC[-6],""_UnitID_"",RC[-1])"
+        Checkout.TextBox7.value = ActiveCell.Offset(0, 7).value
+        ActiveCell.Offset(0, 8).value = Checkout.TextBox8.value
+        ActiveCell.Offset(0, 9).value = Checkout.TextBox9.value
+        ActiveCell.Offset(0, 10).value = Checkout.TextBox13.value
+        ActiveCell.Offset(0, -1).value = Checkout.TextBox12.value
+        ActiveCell.Offset(0, 12).value = Checkout.CheckBox1.value
+        ActiveCell.Offset(0, 13).value = Checkout.CheckBox2.value
+        ActiveCell.Offset(0, 16).value = Checkout.TextBox14.value
+        Checkout.TextBox10.SetFocus
+        Call ResetFocus2
+        Checkout.TextBox11.SetFocus
+End Sub
+
+Private Sub TextBox13_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Dim myString As String
+myString = TextBox13.Text
+If KeyCode = vbKeyReturn Then
+    TextBox13.value = myString & ", "
+    TextBox13.SelStart = TextBox13.TextLength
+    Application.SendKeys "{END}"
+Else
+    Exit Sub
+End If
+Application.SendKeys "{UP}"
+End Sub
+
+Private Sub TextBox14_Change()
+
+End Sub
+
+Private Sub TextBox2_AfterUpdate()
+If Checkout.TextBox2.value < "0" Then
+    Else
+    value = UCase(Checkout.TextBox2.value)
+    If Right(value, 1) = "P" Or Right(value, 1) = "M" Then
+    
+    Else
+        If Mid(value, 6, 1) = "5" Then
+            If MsgBox("Based on Model Type, you entered an Ascend Radio!  Is this a Portable?", vbYesNo) = vbYes Then
+                Checkout.TextBox2.value = value + "P"
+            Else
+                Checkout.TextBox2.value = value + "M"
+            End If
+        Else
+            Exit Sub
+        End If
+        End If
+End If
+End Sub
+
+Private Sub TextBox4_Change()
+
+End Sub
+
+Private Sub TextBox5_Change()
+
+End Sub
+
+Private Sub TextBox6_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Dim vResult As Boolean
+vResult = Application.CountIf(Worksheets("Tracking").Range("L:L"), TextBox6.value)
+If TextBox6.value = "" Then
+    Exit Sub
+Else
+If vResult = "True" Then
+                MsgBox "Unit ID Already Entered!", vbOKOnly
+            Else
+                Exit Sub
+            End If
+            End If
+End Sub
+
+Private Sub Userform_Click()
+    TextBox10.SetFocus
+    TextBox11.SetFocus
+End Sub
+
+Private Sub TextBox10_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    TextBox10.value = Now
+    TextBox11.SetFocus
+End Sub
+
+Private Sub Userform_Activate()
+    Call CommandButton2_Click
+    TextBox10.SetFocus
+    TextBox11.SetFocus
+End Sub
+
+Private Sub CommandButton2_Click()
+    TextBox1.value = ""
+    TextBox2.value = ""
+    TextBox3.value = ""
+    TextBox4.value = ""
+    TextBox5.value = ""
+    TextBox6.value = ""
+    TextBox7.value = ""
+    TextBox8.value = ""
+    TextBox9.value = ""
+    TextBox13.value = ""
+    TextBox11.value = ""
+    TextBox12.value = ""
+    TextBox14.value = ""
+    CheckBox1.value = False
+    CheckBox2.value = False
+    TextBox10.SetFocus
+    TextBox11.SetFocus
+End Sub
+Private Sub TextBox9_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Dim myString As String
+If KeyCode = vbKeyReturn Then
+    myString = TextBox9.Text
+    TextBox9.value = myString & ", "
+    TextBox9.SelStart = TextBox9.TextLength
+    Application.SendKeys "{END}"
+Else
+    Exit Sub
+End If
+Application.SendKeys "{UP}"
+End Sub
+
+
+Private Sub TextBox11_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+ If KeyCode = vbKeyReturn Then
+ Application.OnTime Now, "ResetFocus2"
+ End If
+ End Sub
+
+Private Sub TextBox11_AfterUpdate()
+Dim value As String
+value = UCase(Checkout.TextBox11.value)
+
+If Left(TextBox11.value, 1) = " " Then
+    TextBox11.value = Right(TextBox11.value, Len(TextBox11.value) - 1)
+    If Left(TextBox11.value, 1) = " " Then
+        TextBox10.SetFocus
+        TextBox11.SetFocus
+        Exit Sub
+    Else
+    Call Checksum2
+    End If
+Else
+    If Checkout.TextBox11.value < "0" Then
+    Else
+    value = UCase(Checkout.TextBox11.value)
+        If Left(value, 1) = "S" Or Left(value, 1) = "s" Then
+            TextBox11.value = Right(value, Len(value) - 1)
+        Else
+        End If
+        Call Checksum2
+    End If
+End If
+End Sub
+
+
+Private Sub Checksum2()
+Dim Found As Range
+Dim str As String
+
+str = UCase(Checkout.TextBox11.value)
+Set Found = Sheet2.Range("F1", Range("F" & Rows.Count).End(xlUp)).Find(str)
+If Found Is Nothing Then
+    MsgBox ("Serial Number Not Found!")
+    TextBox11.SelStart = 0
+    TextBox11.SelLength = Len(TextBox11.Text)
+Else
+    Sheet2.Range("F2").Activate
+    Do Until ActiveCell.value = UCase(Checkout.TextBox11.Text)
+        ActiveCell.Offset(1, 0).Select
+        If ActiveCell.value = "" Then
+            MsgBox ("Serial Number Not Found!")
+            Exit Sub
+        Else
+        End If
+    Loop
+    Checkout.TextBox1.value = ActiveCell.value
+    Checkout.TextBox2.value = ActiveCell.Offset(0, 2).value
+    Checkout.TextBox3.value = ActiveCell.Offset(0, 3).value
+    Checkout.TextBox4.value = ActiveCell.Offset(0, 4).value
+    Checkout.TextBox5.value = ActiveCell.Offset(0, 5).value
+    Checkout.TextBox6.value = ActiveCell.Offset(0, 6).value
+    Checkout.TextBox7.value = ActiveCell.Offset(0, 7).value
+    Checkout.TextBox8.value = ActiveCell.Offset(0, 8).value
+    Checkout.TextBox9.value = ActiveCell.Offset(0, 9).value
+    Checkout.TextBox13.value = ActiveCell.Offset(0, 10).value
+    Checkout.CheckBox1.value = ActiveCell.Offset(0, 12).value
+    Checkout.CheckBox2.value = ActiveCell.Offset(0, 13).value
+    Checkout.TextBox12.value = ActiveCell.Offset(0, -1).value
+    Checkout.TextBox14.value = ActiveCell.Offset(0, 16).value
+    Checkout.TextBox11.SetFocus
+End If
+End Sub
+
